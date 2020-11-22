@@ -165,11 +165,185 @@ void VisitSL(pSLnode head) {
 	cout << endl;
 }
 
+//删除最小值
+void DelMinValue(pSLnode head) {
+	
+	pSLnode pre = head, p = head->next, m = p, mp = pre;
+
+	while (p)
+	{
+		if (p->data < m->data) {
+			mp = pre;
+			m = p;
+		}
+		pre = p;
+		p = p->next;
+	}
+	mp->next = m->next;
+	free(m);
+}
+
+//删除target
+bool Delx(pSLnode head,int target) {
+
+	pSLnode p = head;
+
+	while (p->next)
+	{
+		if (p->next->data == target) {
+			
+			pSLnode del = p->next;
+			p->next = p->next->next;
+			free(del);
+			return true;
+		}
+		else
+			p = p->next;
+	}
+	return false;
+}
+
 //原地逆置
+void ReverseList(pSLnode head) {
 
+	pSLnode p = head->next, q;
+	head->next = NULL;
 
+	while (p)
+	{
+		q = p->next;
+		p->next = head->next;
+		head->next = p;
+		p = q;
+	}
+}
+
+//查找倒数第k个点
+bool FindLastK(pSLnode head, int k) {
+
+	pSLnode p = head, q = head->next;
+	int i = 1;
+
+	while (q) {
+
+		q = q->next;
+		i++;
+		if (i > k)
+			p = p->next;
+	}
+	if (k >= i)
+		return false;
+	else
+	{
+		cout << p->data << endl;
+		return true;
+	}
+}
 
 //单链表-----------------------------------结束
+
+
+//双链表------------------------------------------------------------开始
+
+typedef struct DoubleLinkedList {
+	ElemType data;
+	struct DoubleLinkedList* next;
+	struct DoubleLinkedList* pre;
+
+	
+}DLnode,*pDLnode;
+
+void InitDLnode(pDLnode head) {
+	head->next = NULL;
+	head->pre = NULL;
+}
+
+//尾插法
+void CreateDLLbyTail(pDLnode&head,int nums[],int n) {
+
+	pDLnode p, q;
+
+	head = (DoubleLinkedList*)malloc(sizeof(DoubleLinkedList));
+	InitDLnode(head);
+
+	p = head;
+	for (int i = 0; i < n; i++) {
+
+		q = (DoubleLinkedList*)malloc(sizeof(DoubleLinkedList));
+		q->data = nums[i];
+
+		p->next = q;
+		q->pre = p;
+		p = q;
+	}
+	p->next = NULL;
+}
+
+//遍历
+void VisitDLL(pDLnode head) {
+	
+	pDLnode p = head->next;
+
+	while (p)
+	{
+		cout << p->data << " ";
+		p = p->next;
+	}
+	cout << endl;
+}
+
+//查找节点
+pDLnode findTarget(pDLnode head,ElemType target) {
+
+	pDLnode p = head->next;
+	while (p)
+	{
+		if (p->data == target)
+			return p;
+		p = p->next;
+	}
+	return 0;
+}
+
+
+//插入节点
+bool InsertNodeToDLL(pDLnode& head, ElemType value, int index) {
+
+	int i;
+	pDLnode p = head;
+
+	if (index < 0)
+		return false;
+	for (i = 1; i < index; i++) {
+		if (p->next)
+			p = p->next;
+		else
+			break;
+	}
+	if (i < index - 2)
+		return false;
+	else
+	{
+		pDLnode s;
+		s = (DoubleLinkedList*)malloc(sizeof(DoubleLinkedList));
+		s->data = value;
+
+		s->next = p->next;
+		s->pre = p;
+		p->next = s;
+		if (s->next)
+			s->next->pre = s;
+		return true;
+	}
+}
+
+//删除节点
+bool Delx(pDLnode* head, int target) {
+
+	return false;
+}
+
+//双链表------------------------------------------------------------结束
 
 //-----------------------------顺序队列-----------------------------//
 
@@ -584,7 +758,7 @@ void DelNode(tNp p) {
 	}
 }
 //删去每个以target为根的叶子节点
-void Delx(tNp p,int target) {
+void DelxRoot(tNp p,int target) {
 
 	if (p->data == target) {
 		DelNode(p);
@@ -628,12 +802,32 @@ int main() {
 
 
 	//单链表测试
-	int nums[5] = { 1,2,3,4,5 };
-	pSLnode head;
+	//int nums[5] = { 1,2,3,4,5 };
+	//pSLnode head;
 
-	//CreateListByHead(head, nums, 5);
-	CreateListByTail(head, nums, 5);
-	VisitSL(head);
+	////CreateListByHead(head, nums, 5);
+	//CreateListByTail(head, nums, 5);
+	//VisitSL(head);
+
+	//ReverseList(head);
+	//VisitSL(head);
+
+	//Delx(head, 3);
+	//VisitSL(head);
+
+	//DelMinValue(head);
+	//VisitSL(head);
+
+	//FindLastK(head, 2);
+
+	//双链表测试
+	int nums[5] = { 1,2,3,4,5 };
+	pDLnode head;
+	CreateDLLbyTail(head, nums, 5);
+	VisitDLL(head);
+
+	InsertNodeToDLL(head, 10, 8);
+	VisitDLL(head);
 
 	//栈测试
 	/*string in;
