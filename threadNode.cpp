@@ -5,6 +5,7 @@
 #include<stack>
 using namespace std;
 
+#define MaxSize 100
 typedef int ElemType;
 
 template<class Type>
@@ -106,7 +107,17 @@ class String
 		
 };
 
-//单链表-----------------------------------开始
+
+//void CoolCoding(bool code = true) {
+//
+//	string fools[MaxSize];
+//	while (code)
+//		//eat(fools);
+//}
+
+
+
+/******************************************单链表开始******************************************/
 
 typedef struct SinglyLinkedList {
 	ElemType data;
@@ -240,10 +251,10 @@ bool FindLastK(pSLnode head, int k) {
 	}
 }
 
-//单链表-----------------------------------结束
+/******************************************单链表结束******************************************/
 
 
-//双链表------------------------------------------------------------开始
+/******************************************双链表开始******************************************/
 
 typedef struct DoubleLinkedList {
 	ElemType data;
@@ -343,9 +354,9 @@ bool Delx(pDLnode* head, int target) {
 	return false;
 }
 
-//双链表------------------------------------------------------------结束
+/******************************************双链表结束******************************************/
 
-//-----------------------------顺序队列-----------------------------//
+/******************************************顺序队列和链队列开始******************************************/
 
 template<class Type>
 class SqQueue
@@ -404,10 +415,6 @@ class SqQueue
 
 };
 
-//-----------------------------顺序队列-----------------------------//
-
-//-----------------------------链队列-----------------------------//
-
 typedef struct QNode {
 	ElemType data;
 	struct QNode* next;
@@ -417,8 +424,12 @@ typedef struct Queue {
 	QNode* rear;
 }Que, * pQue;
 
-//-----------------------------链队列-----------------------------//
+/******************************************顺序队列和链队列结束******************************************/
 
+
+
+
+/**************************线索二叉树&&二叉树的创建*****************/
 
 typedef struct threadNode {
 
@@ -458,8 +469,39 @@ tNp CreateTree() {
 	return p;
 }
 
-//--------------------------二叉树遍历-----------------------------//
-void NLR(threadNode *p) {
+void InThread(tNp &p,tNp &pre) {
+	
+	if (p) {		
+		InThread(p->left,pre);
+
+		if (p->left == NULL) {
+			p->left = pre;
+			p->ltag = 1;
+		}
+
+		if (pre != NULL && pre->right == NULL) {
+			pre->right = p;
+			pre->rtag = 1;
+		}
+		pre = p;
+		InThread(p->right,pre);
+	}
+}
+void CreateThreadtree(tNp T) {
+
+	tNp pre = NULL;
+	if (T) {
+		InThread(T, pre);
+		pre->right = NULL;
+		pre->rtag = 1;
+	}
+	
+}
+/**************************线索二叉树&&二叉树的创建*****************/
+
+
+/**************************二叉树遍历*******************************/
+void NLR(threadNode* p) {
 
 	if (p) {
 		cout << p->data << " ";
@@ -503,7 +545,7 @@ void StackToNLR(tNp p) {
 		}
 	}
 
-	
+
 }
 void StackToLNR(tNp p) {
 	Stack<tNp> s(10);
@@ -529,7 +571,7 @@ void StackToLRN(tNp p) {
 	Stack<tNp> s(10);
 	tNp t = p, r = NULL;
 
-	while (p||!s.IsEmpty())
+	while (p || !s.IsEmpty())
 	{
 		if (p) {
 			s.Push(p);
@@ -553,44 +595,16 @@ void StackToLRN(tNp p) {
 		}
 	}
 }
+/**************************二叉树遍历*******************************/
 
-void InThread(tNp &p,tNp &pre) {
-	
-	if (p) {		
-		InThread(p->left,pre);
 
-		if (p->left == NULL) {
-			p->left = pre;
-			p->ltag = 1;
-		}
-
-		if (pre != NULL && pre->right == NULL) {
-			pre->right = p;
-			pre->rtag = 1;
-		}
-		pre = p;
-		InThread(p->right,pre);
-	}
-}
-
-void CreateThreadtree(tNp T) {
-
-	tNp pre = NULL;
-	if (T) {
-		InThread(T, pre);
-		pre->right = NULL;
-		pre->rtag = 1;
-	}
-	
-}
-
+/**************************线索二叉树遍历****************************/
 tNp firstNode(tNp p) {
 
 	while (p->ltag == 0) 
 		p = p->left;
 	return p;
 }
-
 tNp nextNode(tNp p) {
 
 	if (p->rtag == 0)
@@ -598,14 +612,15 @@ tNp nextNode(tNp p) {
 	else
 		return p->right;
 }
-
 void inOrder(tNp t) {
 	for (tNp tmp = firstNode(t); tmp != NULL; tmp = nextNode(tmp))
 		cout << tmp->data << " ";
 	cout << endl;
 }
+/**************************线索二叉树遍历****************************/
 
-//--------------------------二叉树遍历-----------------------------//
+
+/**************************二叉树操作*******************************/
 
 //递归求树高
 int getHeightbyRec(tNp p) {
@@ -748,7 +763,6 @@ int WPL(tNp p,int dep) {
 	return wpl;
 }
 
-
 //砍树
 void DelNode(tNp p) {
 	if (p) {
@@ -757,6 +771,7 @@ void DelNode(tNp p) {
 		free(p);
 	}
 }
+
 //删去每个以target为根的叶子节点
 void DelxRoot(tNp p,int target) {
 
@@ -790,8 +805,151 @@ void DelxRoot(tNp p,int target) {
 	}
 }
 
+/**************************二叉树操作*******************************/
+
+/******************************************树和森林存储结构******************************************/
+
+//双亲表示法
+typedef struct {
+	char data;
+	int parent;
+}PTnode;
+
+typedef struct {
+	PTnode nodes[MaxSize];
+	int n, r;
+}PTtree;
+
+void InitPTtree(PTtree& p, int n) {
+
+	for (int i = 0; i < n; i++) {
+		p.nodes[i].parent = -1;
+		p.nodes[i].data = '#';
+	}
+	p.n = 0;
+}
+
+bool InsertNode(PTtree& p,char node) {
+	
+	if (node != '#') {
+		p.nodes[p.n++].data = node;
+		return true;
+	}
+	return false;
+}
+
+bool InsertParent(PTtree &t,char son,char father){
+
+	int son_pos = -1, father_pos = -1;
+
+	for (int i = 0; i < t.n; i++) {
+		if (t.nodes[i].data == son)	son_pos = i;
+		if (t.nodes[i].data == father)	father_pos = i;
+	}
+
+	if (son_pos != -1 && father_pos != -1) {
+		t.nodes[son_pos].parent = father_pos;
+		return true;
+	}
+
+	return false;
+}
+
+void CreateByPTtree(PTtree& t) {
+	//10 R A B C D E F G H K A R B R C R D A E A F C G F H F K F
+	
+	int n = 0;
+	int par;
+
+	char node, son, father;
+	cin >> n;
+	InitPTtree(t, n);
+	par = n - 1;
+	while (n--)
+	{
+		cin >> node;
+		InsertNode(t, node);
+	}
+	while (par--)
+	{
+		cin >> son >> father;
+		InsertParent(t, son, father);
+	}
+}
+
+void VisitPTtree(PTtree t) {
+	for (int i = 0; i < t.n; i++)
+		cout << "data: " << t.nodes[i].data << "  parent: " << t.nodes[i].parent << endl;
+}
+//兄弟表示法
+
+typedef struct CSnode {
+	char data;
+	struct CSnode* firstChild, * nextSibling;
+}CSnode, * pCSnode, ** ppCSnode;
+
+void CreateByCStree(pCSnode& p) {
+	//R ABC DE # F # # GHK # # #
+	char input[20], root;
+	cin >> root;
+
+	SqQueue<pCSnode> qu(20);
+
+	if (root != '#') {
+
+		p = (CSnode*)malloc(sizeof(CSnode));
+		p->nextSibling = NULL;
+		p->data = root;
+
+		qu.EnQueue(p);
+
+		pCSnode father, son;
+		while (!qu.QueueIsEmpty())
+		{
+			qu.GetQueueTop(father);
+			qu.DeQueue();
+
+			cin >> input;
+			if (input[0] != '#') {
+
+				father->firstChild = (CSnode*)malloc(sizeof(CSnode));
+				father->firstChild->data = input[0];
+				son = father->firstChild;
+
+			/*	son = father->firstChild;
+				son->data = input[0];*/
+
+				for (int i = 1; i < strlen(input); i++) {
+					son->nextSibling = (CSnode*)malloc(sizeof(CSnode));
+					son->nextSibling->data = input[i];
+					
+					qu.EnQueue(son);
+					son = son->nextSibling;
+				}
+				qu.EnQueue(son);
+				son->nextSibling = NULL;
+			}
+			else
+				father->firstChild = NULL;
+		}
 
 
+	}
+	else
+		p = NULL;
+
+}
+
+
+void VistiCStree(pCSnode p) {
+
+	if (p) {
+		cout << p->data << " ";
+		VistiCStree(p->firstChild);
+		VistiCStree(p->nextSibling);
+	}
+}
+/******************************************树和森林存储结构******************************************/
 
 void test(int*& p) {
 	int a = 4;
@@ -800,6 +958,32 @@ void test(int*& p) {
 
 int main() {
 
+	//双亲表示测试
+	/*PTtree t;
+	CreateByPTtree(t);
+	VisitPTtree(t);*/
+	
+	//孩子兄弟表示
+	pCSnode p;
+	CreateByCStree(p);
+	VistiCStree(p);
+
+
+	//指针与指针的指针
+	//int* p;
+	//p = (int*)malloc(sizeof(int) * 4);
+
+	//int** q;
+	//for (int i = 0; i < 4; i++) {
+	//	*(p + i) = (int)malloc(sizeof(int));
+	//	cin >> *(p + i);
+	//	cout << *(p + i) << endl;
+	//}
+
+	
+		
+		
+	
 
 	//单链表测试
 	//int nums[5] = { 1,2,3,4,5 };
@@ -821,13 +1005,13 @@ int main() {
 	//FindLastK(head, 2);
 
 	//双链表测试
-	int nums[5] = { 1,2,3,4,5 };
+	/*int nums[5] = { 1,2,3,4,5 };
 	pDLnode head;
 	CreateDLLbyTail(head, nums, 5);
 	VisitDLL(head);
 
 	InsertNodeToDLL(head, 10, 8);
-	VisitDLL(head);
+	VisitDLL(head);*/
 
 	//栈测试
 	/*string in;
