@@ -807,6 +807,49 @@ void DelxRoot(tNp p,int target) {
 
 /**************************二叉树操作*******************************/
 
+
+/**************************二叉排序树操作*******************************/
+
+//二叉排序树查找
+tNp Target_In_BST(tNp p, ElemType target) {
+	if (p == NULL)
+		return NULL;
+	if (p->data == target)
+		return p;
+	else if (target < p->data)
+		Target_In_BST(p->left, target);
+	else
+		Target_In_BST(p->right, target);
+}
+
+//二叉排序树插入
+bool Insert_BTS(tNp& p, ElemType x) {
+	if (p == NULL) {
+
+		p = new tN;
+		p->left = p->right = NULL;
+		p->data = x;
+		return true;
+	}
+	else
+	{
+		if (x == p->data)	return false;
+		else if (x > p->data) return Insert_BTS(p->right, x);
+		else return Insert_BTS(p->left, x);
+	}
+}
+
+//构造二叉排序树
+void Create_BTS(tNp& p,ElemType nums[],int n) {
+	p = NULL;
+	for (int i = 0; i < n; i++)
+		Insert_BTS(p, nums[i]);
+
+}
+
+
+/**************************二叉排序树操作*******************************/
+
 /******************************************树和森林存储结构******************************************/
 
 //双亲表示法
@@ -940,7 +983,7 @@ void CreateByCStree(pCSnode& p) {
 
 }
 
-
+//先序遍历
 void VistiCStree(pCSnode p) {
 
 	if (p) {
@@ -949,6 +992,85 @@ void VistiCStree(pCSnode p) {
 		VistiCStree(p->nextSibling);
 	}
 }
+//中序遍历
+void MinVisitCStree(pCSnode p) {
+
+	if (p) {
+		MinVisitCStree(p->firstChild);
+		cout << p->data << " ";
+		MinVisitCStree(p->nextSibling);
+	}
+}
+
+//统计叶子节点
+int CountCStreeLeaf(pCSnode p){
+
+	if (!p)
+		return 0;
+	if (!p->firstChild)
+		return 1 + CountCStreeLeaf(p->nextSibling);
+	else
+		return CountCStreeLeaf(p->firstChild) + CountCStreeLeaf(p->nextSibling);
+}
+
+//高度
+int getHeight(pCSnode p) {
+
+	if (!p)
+		return 0;
+	else
+	{
+		int hChild, hSibling;
+
+		hChild = getHeight(p->firstChild);
+		hSibling = getHeight(p->nextSibling);
+
+		return hChild + 1 > hSibling ? hChild + 1 : hSibling;
+	}
+}
+
+//根据每个结点的度以及层次序列构造兄弟表示
+void CreateCStree_By_Degree(pCSnode& t, char e[], int degree[], int n) {
+
+	pCSnode* p = (pCSnode*)malloc(sizeof(CSnode) * n);
+	for (int i = 0; i < n; i++) {
+		p[i] = (CSnode*)malloc(sizeof(CSnode));
+		p[i]->data = e[i];
+		p[i]->firstChild = p[i]->nextSibling = NULL;
+	}
+
+	int de, kid = 0;
+
+	for (int i = 0; i < n; i++) {
+		
+		de = degree[i];
+		if (de) {
+			
+			kid++;
+			p[i]->firstChild = p[kid];
+			for (int j = 2; j <= de; j++) {
+				kid++;
+				p[kid - 1]->nextSibling = p[kid];
+			}
+		}
+	}
+	t = p[0];
+	free(p);
+}
+
+//深度为h的平衡树最少节点
+int NodesTo_Height(int height) {
+
+	if (height == 0)
+		return 0;
+	if (height == 1)
+		return 1;
+	if (height == 2)
+		return 2;
+	if (height > 2)
+		return NodesTo_Height(height - 1) + NodesTo_Height(height - 2) + 1;
+}
+
 /******************************************树和森林存储结构******************************************/
 
 void test(int*& p) {
@@ -958,15 +1080,43 @@ void test(int*& p) {
 
 int main() {
 
+
+	//BST测试
+	//tNp p, res;
+	//int nums[10] = { 9,23,12,43,1,86,45,33,30,55 };
+	//Create_BTS(p, nums, 10);
+	//LNR(p);
+	//cout << endl;
+	//res = Target_In_BST(p, 86);
+	//cout << res->data << endl;
+
+	cout << NodesTo_Height(40) << endl;
+
+
 	//双亲表示测试
 	/*PTtree t;
 	CreateByPTtree(t);
 	VisitPTtree(t);*/
-	
+
+
+
 	//孩子兄弟表示
-	pCSnode p;
-	CreateByCStree(p);
-	VistiCStree(p);
+	//pCSnode p;
+	//CreateByCStree(p);
+	//VistiCStree(p);
+	//cout << endl;
+	//MinVisitCStree(p);
+	//cout << endl;
+
+	//cout << CountCStreeLeaf(p) << endl;
+	//cout << getHeight(p) << endl;
+
+	//pCSnode q;
+	//char e[11] = "RABCDEFGHK";
+	//int n = 10;
+	//int degree[10] = { 3,2,0,1,0,0,3,0,0,0 };
+	//CreateCStree_By_Degree(q, e, degree, n);
+	//VistiCStree(q);
 
 
 	//指针与指针的指针
