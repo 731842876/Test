@@ -620,7 +620,7 @@ void inOrder(tNp t) {
 /**************************线索二叉树遍历****************************/
 
 
-/**************************二叉树操作*******************************/
+/**************************二叉树操作开始*******************************/
 
 //递归求树高
 int getHeightbyRec(tNp p) {
@@ -805,10 +805,10 @@ void DelxRoot(tNp p,int target) {
 	}
 }
 
-/**************************二叉树操作*******************************/
+/**************************二叉树操作结束*******************************/
 
 
-/**************************二叉排序树操作*******************************/
+/**************************二叉排序树操作开始*******************************/
 
 //二叉排序树查找
 tNp Target_In_BST(tNp p, ElemType target) {
@@ -847,10 +847,75 @@ void Create_BTS(tNp& p,ElemType nums[],int n) {
 
 }
 
+//判断是否为二叉排序树
+int Is_BST(tNp p) {
 
-/**************************二叉排序树操作*******************************/
+	static int PreNum = -999;
+	int l, r;
+	if (!p)
+		return 1;
+	else
+	{
+		l=Is_BST(p->left);
+		if (l == 0 || PreNum >= p->data)
+			return 0;
+		PreNum = p->data;
 
-/******************************************树和森林存储结构******************************************/
+		r = Is_BST(p->right);
+		return r;
+
+	}
+
+}
+
+//判断是否为平衡二叉排序树
+void Is_Balance_BST(tNp p, int& h, int& balance) {
+
+	int hl, bl, hr, br;
+	if (!p) {
+		balance = 1;
+		h = 0;
+	}
+	else if (p->left == NULL && p->right == NULL) {
+		balance = 1;
+		h = 1;
+	}
+	else
+	{
+		Is_Balance_BST(p->left, hl, bl);
+		Is_Balance_BST(p->right, hr, br);
+
+		h = (hl > hr ? hl : hr) + 1;
+		if (abs(hl - hr) < 2)
+			balance = bl && br;
+		else
+			balance = 0;
+	}
+}
+
+//给定节点在二叉排序树中的层次
+int Target_In_Level(tNp p, int target) {
+	int n = 0;
+
+	if (p) {
+		n++;
+		while (p->data != target)
+		{
+			if (p->data > target)
+				p = p->left;
+			else
+				p = p->right;
+			n++;
+		}
+	}
+	return n;
+
+}
+
+
+/**************************二叉排序树操作结束*******************************/
+
+/******************************************树和森林存储结构开始******************************************/
 
 //双亲表示法
 typedef struct {
@@ -1071,7 +1136,7 @@ int NodesTo_Height(int height) {
 		return NodesTo_Height(height - 1) + NodesTo_Height(height - 2) + 1;
 }
 
-/******************************************树和森林存储结构******************************************/
+/******************************************树和森林存储结构结束******************************************/
 
 void test(int*& p) {
 	int a = 4;
@@ -1081,16 +1146,22 @@ void test(int*& p) {
 int main() {
 
 
-	//BST测试
-	//tNp p, res;
-	//int nums[10] = { 9,23,12,43,1,86,45,33,30,55 };
-	//Create_BTS(p, nums, 10);
-	//LNR(p);
-	//cout << endl;
-	//res = Target_In_BST(p, 86);
-	//cout << res->data << endl;
-
+	//BST测试,BST:二叉排序树不是平衡二叉树
+	tNp p, res;
+	int nums[10] = { 9,23,12,43 };
+	Create_BTS(p, nums, 10);
+	LNR(p);
+	cout << endl;
+	res = Target_In_BST(p, 23);
+	cout << res->data << endl;
 	cout << NodesTo_Height(40) << endl;
+	cout << Is_BST(p) << endl;
+	cout << Target_In_Level(p, 9) << endl;
+
+	int height, balance;
+	Is_Balance_BST(p, height, balance);
+	cout << height << " " << balance << endl;
+
 
 
 	//双亲表示测试
@@ -1255,3 +1326,9 @@ int main() {
 	//inOrder(p);
 
 }
+//Ctrl + M + O: 折叠所有方法
+//
+//Ctrl + M + M : 折叠或者展开当前方法
+//
+//Ctrl + M + L : 展开所有方法
+
