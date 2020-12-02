@@ -18,5 +18,31 @@
     <ClCompile Include="threadNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Stack.h">
+      <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SinglyLikedList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Value.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleLinkedList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Squeue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TString.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -139,7 +139,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Stack.h" />
+    <ClCompile Include="Test.cpp" />
     <ClCompile Include="threadNode.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DoubleLinkedList.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="SinglyLikedList.h" />
+    <ClInclude Include="Squeue.h" />
+    <ClInclude Include="TString.h" />
+    <ClInclude Include="Value.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
