@@ -1,11 +1,11 @@
 //https://blog.csdn.net/out_of_memory_error/article/details/102332332?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
 #define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
-#include<string>
-#include<stack>
+
 #include "Stack.h"
 #include "Squeue.h"
 #include "Value.h"
+#include "Map.h"
 using namespace std;
 
 
@@ -726,9 +726,17 @@ void test(int*& p) {
 
 int main() {
 
+	//邻接表图测试
+	//4 5 A B C D A B A C A D B C C D
+	MGraph m("UDG");
+	m.Visit();
+	m.Neighbors("A");
+
+
+
 
 	//BST测试,BST:二叉排序树不是平衡二叉树
-	tNp p, res;
+	/*tNp p, res;
 	int nums[10] = { 9,23,12,43 };
 	Create_BTS(p, nums, 10);
 	LNR(p);
@@ -741,7 +749,7 @@ int main() {
 
 	int height, balance;
 	Is_Balance_BST(p, height, balance);
-	cout << height << " " << balance << endl;
+	cout << height << " " << balance << endl;*/
 
 
 
