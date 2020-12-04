@@ -732,6 +732,17 @@ int main() {
 	m.Visit();
 	m.Neighbors("A");
 
+	if (m.Adjacent("A", "B"))
+		cout << "1" << endl;
+
+	m.InsertVertex("E");
+	m.Visit();
+	m.DeteleVertex("B");
+	m.Visit();
+	
+	m.AddEdge("A", "E");
+	m.Visit();
+
 
 
 

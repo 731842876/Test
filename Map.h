@@ -19,6 +19,7 @@ using namespace std;
 class MGraph
 {
 	private:
+		string Type;//有向图DG，无向图UDG，有向网DN,无向网UDN
 		string vexs[MaxSize];
 		int arcs[MaxSize][MaxSize];
 		int vexnum, arcnum;//vertx:顶点，arc:弧
@@ -51,11 +52,12 @@ class MGraph
 
 	public:
 
-		//有向图DG，无向图UDG，有向网DN,无向网UDN
+		//重载构造
 		MGraph(string op="DG") {
 
 			string v1, v2;
 			int ip, jp;
+			Type = op;
 
 			if (op == "DG") {
 				Input();
@@ -133,8 +135,15 @@ class MGraph
 				cout << setw(4) << vexs[i] << '\t';
 
 				for (int j = 0; j < vexnum; j++) {
-					cout << setiosflags(ios::right);
-					cout << arcs[i][j] << "|" << '\t';
+					if (arcs[i][j]!=-404) {
+						cout << setiosflags(ios::right);
+						cout << arcs[i][j] << "|" << '\t';
+					}
+					else
+					{
+						cout << setiosflags(ios::right);
+						cout << "-" << "|" << '\t';
+					}
 				}
 				cout << endl;
 			}
@@ -146,11 +155,11 @@ class MGraph
 			ip = LocatVex(v1);
 			jp = LocatVex(v2);
 			if (ip != -1 && jp != -1)
-				if (arcs[ip][jp] != 0 || arcs[jp][ip] != 0)
-					return true;
-			return false;
+				return arcs[ip][jp] != 0 ? true : false;
+			else
+				exit(0);
 		}
-
+		//与节点x邻接的边
 		void Neighbors(string v) {
 			int pos = LocatVex(v);
 			if (pos != -1) {
@@ -161,7 +170,97 @@ class MGraph
 				cout << endl;
 			}
 		}
+		//插入节点
+		bool InsertVertex(string in) {
+			if (vexnum > MaxSize - 1) {
+				cout << "已存储最大节点数" << endl;
+				return false;
+			}
+			else
+			{
+				vexs[vexnum] = in;
+				vexnum++;
+				for (int i = 0; i < vexnum; i++) 
+					arcs[vexnum-1][i] = arcs[i][vexnum-1] = 0;
+				
+				return true;
+			}	
+		}
+		//删除节点
+		bool DeteleVertex(string in) {
 
+			int pos = LocatVex(in);
+			if (pos == -1)
+				return false;
+			else
+			{
+				for (int i = 0; i < vexnum; i++)
+					arcs[pos][i] = arcs[i][pos] = -404;
+				
+				return true;
+			}
+		}
+
+		//没有该边便添加
+		void AddEdge(string v1,string v2) {
+			
+			if (Adjacent(v1, v2))
+				cout << "已存在" << endl;
+			else
+			{
+				int i = LocatVex(v1);
+				int j = LocatVex(v2);
+				if (Type == "DG") {
+					arcs[i][j] = 1;
+				}
+				else if (Type == "DN")
+				{
+					int w;
+					cin >> w;
+					arcs[i][j] = w;
+				}
+				else if (Type == "UDG")
+					arcs[i][j] = arcs[j][i] = 1;
+				else
+				{
+					int w;
+					cin >> w;
+					arcs[i][j] = arcs[j][i] = w;
+				}
+				cout << "已添加" << endl;
+			}
+
+		}
+
+		//设置权重
+		bool Set_Weight(string v1, string v2, int w) {
+
+			if (!Adjacent(v1, v2))
+				return false;
+			else
+			{
+				int i = LocatVex(v1);
+				int j = LocatVex(v2);
+				if (Type == "DN")
+					arcs[i][j] = w;
+				else
+					arcs[i][j] = arcs[j][i] = w;
+			}
+		}
+		//获得权重
+		int Get_Weight(string v1, string v2) {
+			int res = -1;
+			if (!Adjacent(v1, v2))
+				return res;
+			else
+			{
+				int i = LocatVex(v1);
+				int j = LocatVex(v2);
+				if (Type == "DN")
+					res = arcs[i][j];
+				return res;
+			}
+		}	
 
 		~MGraph() {
 			//delete[]arcs;
