@@ -743,7 +743,8 @@ int main() {
 	m.AddEdge("A", "E");
 	m.Visit();
 
-
+	cout << m.FirstNeighbor("A") << endl;
+	cout << m.NextNeighbor("A", "B") << endl;
 
 
 	//BST²âÊÔ,BST:¶þ²æÅÅÐòÊ÷²»ÊÇÆ½ºâ¶þ²æÊ÷

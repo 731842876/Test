@@ -262,6 +262,28 @@ class MGraph
 			}
 		}	
 
+
+		//返回顶点v的第一个邻接点
+		int FirstNeighbor(string v) {
+
+			int pos = LocatVex(v);
+			for (int i = 0; i < vexnum; i++)
+				if (arcs[pos][i] != 0)
+					return i;
+			//cout << vexs[i] << endl;
+			return -1;		
+		}
+
+		//返回顶点v的相对于w的下一个邻接点
+		int NextNeighbor(string v, string w) {
+			int pos = LocatVex(v);
+			int st = LocatVex(w);
+			for (int i = st+1; i < vexnum; i++) {
+				if (arcs[pos][i] != 0)
+					return i;
+			}
+			return -1;
+		}
 		~MGraph() {
 			//delete[]arcs;
 		}
