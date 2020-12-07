@@ -5,6 +5,7 @@
 
 #include"Value.h"
 
+
 using namespace std;
 
 /**************************图的邻接矩阵及操作开始*****************/
@@ -19,6 +20,7 @@ using namespace std;
 class MGraph
 {
 	private:
+		bool Visited[MaxSize];//深度优先遍历标记访问
 		string Type;//有向图DG，无向图UDG，有向网DN,无向网UDN
 		string vexs[MaxSize];
 		int arcs[MaxSize][MaxSize];
@@ -48,6 +50,16 @@ class MGraph
 				for (int j = 0; j < vexnum; j++)
 					arcs[i][j] = 0;
 
+		}
+
+		//DFS
+		void DFS(int i) {
+			Visited[i] = true;
+
+			cout << vexs[i] << " ";
+			for (int j = 0; j < vexnum; j++)
+				if (arcs[i][j] != 0 && !Visited[j])
+					DFS(j);
 		}
 
 	public:
@@ -163,7 +175,7 @@ class MGraph
 		void Neighbors(string v) {
 			int pos = LocatVex(v);
 			if (pos != -1) {
-				cout << "与该点邻接的边: ";
+				cout << vexs[pos] << " 与该点邻接的边: ";
 				for (int i = 0; i < vexnum; i++)
 					if (arcs[pos][i] != 0)
 						cout << vexs[i] << " ";
@@ -284,6 +296,60 @@ class MGraph
 			}
 			return -1;
 		}
+		
+		
+		//深度优先搜索
+		void DFS_func() {
+			cout << "DFS: ";
+			for (int i = 0; i < vexnum; i++)
+				Visited[i] = false;
+
+			for (int i = 0; i < vexnum; i++)
+				if (!Visited[i])
+					DFS(i);
+			cout << endl;
+		}
+		
+		//广度优先搜索
+		void BFS_func() {
+			
+			SqQueue<int> q(10);
+			for (int i = 0; i < vexnum; i++)
+				Visited[i] = false;
+			
+			cout << "BFS: ";
+			
+			for (int i = 0; i < vexnum; i++)
+			{
+				if (!Visited[i]) {
+
+					Visited[i] = true;
+					q.EnQueue(i);
+					cout << vexs[i] << " ";
+					while (!q.QueueIsEmpty())
+					{
+						q.GetQueueTop(i);
+						q.DeQueue();
+
+						for (int j = 0; j < vexnum; j++) {
+
+							if (arcs[i][j] != 0 && !Visited[j]) {
+								cout << vexs[j] << " ";
+								q.EnQueue(j);
+								Visited[j] = true;
+							}
+						}
+					}
+				}
+
+			}
+			cout << endl;
+		}
+		
+		
+		
+		
+		
 		~MGraph() {
 			//delete[]arcs;
 		}
@@ -302,10 +368,206 @@ class MGraph
 
 /**************************图的邻接表及操作开始*****************/
 
-typedef struct ArcNode {
-	int adjvex;
-	ArcNode* next;
-}arn;
+
+
+//
+//typedef struct {
+//	Vnode vexs[MaxSize];
+//	int vexnum, arcnum;
+//};
+
+class ALGraph
+{
+
+	private:
+
+		//表节点
+		typedef struct ArcNode {
+			int adjvex;
+			ArcNode* next;
+		}Arn,*pArc;
+
+		//头节点
+		typedef struct Vnode{
+			string data;
+			pArc firstArc;
+		}Vnode;
+
+
+		Vnode vexs[MaxSize];
+		int vexnum, arcnum;
+		bool Visited[MaxSize];
+
+	private:
+
+		int LocatVex(string in) {
+
+			for (int i = 0; i < vexnum; i++)
+				if (vexs[i].data == in)
+					return i;
+			return -1;
+		}
+
+
+	public:
+		ALGraph() {
+
+			//UDG
+			cout << "vexnum and arcnum: " << endl;
+			cin >> vexnum >> arcnum;
+
+			cout << "input vertx name: " << endl;
+			for (int i = 0; i < vexnum; i++) {
+				cin >> vexs[i].data;
+				vexs[i].firstArc = NULL;
+			}
+
+			int ip, jp;
+			string v1, v2;
+
+			cout << "input arcs: " << endl;
+			for (int i = 0; i < arcnum; i++) {
+
+				cin >> v1 >> v2;
+				ip = LocatVex(v1);
+				jp = LocatVex(v2);
+
+				//头插法
+				pArc a = new ArcNode;
+				a->adjvex = jp;
+				a->next = vexs[ip].firstArc;
+				vexs[ip].firstArc = a;
+
+				a = new ArcNode;
+				a->adjvex = ip;
+				a->next = vexs[jp].firstArc;
+				vexs[jp].firstArc = a;
+			}
+
+				
+			
+		}
+
+
+
+		void Visit() {
+			cout << endl;
+			for (int i = 0; i < vexnum; i++) {
+
+				cout << vexs[i].data;
+				pArc p = vexs[i].firstArc;
+				while (p)
+				{
+					cout << " --> " << vexs[p->adjvex].data;
+					p = p->next;
+				}
+				cout << endl;
+			}
+			cout << endl;
+		}
+		
+		//返回顶点v的第一个邻接点
+		int FirstNeighbor(int pos) {
+			pArc p = vexs[pos].firstArc;
+			if (p)
+				return p->adjvex;
+			else
+				return -1;
+		}
+
+		//返回顶点v的相对于w的下一个邻接点
+		int NextNeighbor(int pos ,int t) {
+			pArc p = vexs[pos].firstArc;
+			while (p)
+			{
+				if (p->adjvex == t)
+					break;
+				p = p->next;
+			}	
+			if (!p->next || p->adjvex != t)
+				return -1;
+			return p->next->adjvex;
+		}
+
+
+
+		
+		void DFS(int i) {
+
+			Visited[i] = true;
+			cout << vexs[i].data << " ";
+			for (int j=FirstNeighbor(i);j>=0;j=NextNeighbor(i,j))
+				if (!Visited[j])
+					DFS(j);
+			
+
+		}
+
+		//深度优先搜索
+		void DFS_func() {
+
+			cout << "DFS: ";
+
+			for (int i = 0; i < vexnum; i++)
+				Visited[i] = false;
+
+			for (int i = 0; i < vexnum; i++)
+				if (!Visited[i])
+					DFS(i);
+			cout << endl;
+		}
+
+
+		//广度优先搜索
+		void BFS_func(){
+
+			SqQueue<int> q(10);
+			for (int i = 0; i < vexnum; i++)
+				Visited[i] = false;
+
+			cout << "BFS: ";
+			for (int i = 0; i < vexnum; i++)
+			{
+
+				if (!Visited[i])
+				{
+					Visited[i] = true;
+					q.EnQueue(i);
+					
+					while (!q.QueueIsEmpty())
+					{
+						int pos;
+						q.GetQueueTop(pos);
+						q.DeQueue();
+						cout << vexs[pos].data << " ";
+
+						for (int j = FirstNeighbor(pos); j >=0; j=NextNeighbor(pos,j))
+						{
+							if (!Visited[j]) {
+								q.EnQueue(j);
+								Visited[j] = true;
+							}
+						}
+					}
+				}
+
+			}
+			cout << endl;
+		}
+
+
+
+		~ALGraph() {
+
+		}
+
+
+
+};
+
+
+
+
 /**************************图的邻接表及操作结束*****************/
 #endif // !Common_Map
 

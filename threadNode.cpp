@@ -2,8 +2,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
 
-#include "Stack.h"
-#include "Squeue.h"
+
+#include"Stack.h"
+#include"Squeue.h"
 #include "Value.h"
 #include "Map.h"
 using namespace std;
@@ -726,13 +727,34 @@ void test(int*& p) {
 
 int main() {
 
-	//¡⁄Ω”±ÌÕº≤‚ ‘
-	//4 5 A B C D A B A C A D B C C D
-	MGraph m("UDG");
-	m.Visit();
-	m.Neighbors("A");
 
-	if (m.Adjacent("A", "B"))
+	//¡⁄Ω”±Ì≤‚ ‘
+	//4 5 A B C D A B A C B C B D C D
+	//6 7 A B C D E F A B A C A E B F C D D E E F
+	ALGraph m;
+	m.Visit();
+	m.DFS_func();
+	m.BFS_func();
+	
+
+
+	//¡⁄Ω”æÿ’Û≤‚ ‘
+	//4 5 A B C D A B A C A D B C C D
+	//8 9 A B C D E F G H A B A F A D B G C D C E E G F H G H
+	
+	//D G
+	//8 11 A B C D E F G H A B A C A F B F C B C D F H G B G C G E H G
+	//MGraph m("DG");
+	////MGraph m("UDG");
+	//m.Visit();
+	//m.Neighbors("A");
+	//m.Neighbors("G");
+
+
+	//m.DFS_Search();
+	//m.BFS_Search();
+
+	/*if (m.Adjacent("A", "B"))
 		cout << "1" << endl;
 
 	m.InsertVertex("E");
@@ -744,7 +766,7 @@ int main() {
 	m.Visit();
 
 	cout << m.FirstNeighbor("A") << endl;
-	cout << m.NextNeighbor("A", "B") << endl;
+	cout << m.NextNeighbor("A", "B") << endl;*/
 
 
 	//BST≤‚ ‘,BST:∂˛≤Ê≈≈–Ú ˜≤ª «∆Ω∫‚∂˛≤Ê ˜
