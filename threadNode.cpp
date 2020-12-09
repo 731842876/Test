@@ -1,4 +1,3 @@
-//https://blog.csdn.net/out_of_memory_error/article/details/102332332?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
 #define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
 
@@ -729,13 +728,21 @@ int main() {
 
 
 	//¡⁄Ω”±Ì≤‚ ‘
-	//4 5 A B C D A B A C B C B D C D
-	//6 7 A B C D E F A B A C A E B F C D D E E F
-	ALGraph m;
+	//UDG 4 5 A B C D A B A C B C B D C D
+	//UDG 6 7 A B C D E F A B A C A E B F C D D E E F
+	//DG 6 7 A B C D E F A B B C B F D B E B F A F E
+	ALGraph m("DG");
 	m.Visit();
 	m.DFS_func();
 	m.BFS_func();
-	
+
+	m.Find_Path("A", "D");
+
+	m.DFS_to_FindPath("A", "F");
+	m.DFS_to_FindPath("A", "D");
+
+	m.BFS_to_FindPath("A", "F");
+	m.BFS_to_FindPath("A", "D");
 
 
 	//¡⁄Ω”æÿ’Û≤‚ ‘
@@ -744,15 +751,17 @@ int main() {
 	
 	//D G
 	//8 11 A B C D E F G H A B A C A F B F C B C D F H G B G C G E H G
-	//MGraph m("DG");
-	////MGraph m("UDG");
+
+	//8 9 A B C D E F G H A B A E A H B C B D C D C H E F E G
+	//MGraph m("UDG");
 	//m.Visit();
 	//m.Neighbors("A");
 	//m.Neighbors("G");
 
 
-	//m.DFS_Search();
-	//m.BFS_Search();
+	//m.DFS_func();
+	//m.BFS_func();
+	
 
 	/*if (m.Adjacent("A", "B"))
 		cout << "1" << endl;

@@ -4,7 +4,8 @@
 #define Common_Map
 
 #include"Value.h"
-
+#include"Stack.h"
+#include"Squeue.h"
 
 using namespace std;
 
@@ -396,6 +397,8 @@ class ALGraph
 
 		Vnode vexs[MaxSize];
 		int vexnum, arcnum;
+
+		string Type;
 		bool Visited[MaxSize];
 
 	private:
@@ -408,11 +411,50 @@ class ALGraph
 			return -1;
 		}
 
+		void Finding(int start, int end, int save_path[], int count) {
+
+			count++;
+			save_path[count] = start;
+			Visited[start] = true;
+
+			if (start == end)
+			{
+				cout << "Path: ";
+				for (int i = 0; i <= count; i++)
+					cout << vexs[save_path[i]].data << " ";
+				cout << endl;
+			}
+
+			pArc p = vexs[start].firstArc;
+			while (p)
+			{
+				if (!Visited[p->adjvex])
+					Finding(p->adjvex, end, save_path, count);
+				p = p->next;
+			}
+			Visited[start] = false;
+		}
+
+		bool DFS_Finding(int start, int end) {
+			if (start == end)
+				return true;
+			else
+			{
+				Visited[start] = true;
+				for (int i = FirstNeighbor(start); i >= 0; i = NextNeighbor(start, i))
+				{
+					if (!Visited[i] && DFS_Finding(i, end))
+						return true;
+				}
+			}
+			return false;
+		}
 
 	public:
-		ALGraph() {
+		ALGraph(string type="UDG") {
 
-			//UDG
+			
+			Type = type;
 			cout << "vexnum and arcnum: " << endl;
 			cin >> vexnum >> arcnum;
 
@@ -432,20 +474,29 @@ class ALGraph
 				ip = LocatVex(v1);
 				jp = LocatVex(v2);
 
-				//头插法
-				pArc a = new ArcNode;
-				a->adjvex = jp;
-				a->next = vexs[ip].firstArc;
-				vexs[ip].firstArc = a;
+				if (Type=="UDG")//UDG
+				{
+					//头插法
+					pArc a = new ArcNode;
+					a->adjvex = jp;
+					a->next = vexs[ip].firstArc;
+					vexs[ip].firstArc = a;
 
-				a = new ArcNode;
-				a->adjvex = ip;
-				a->next = vexs[jp].firstArc;
-				vexs[jp].firstArc = a;
+					a = new ArcNode;
+					a->adjvex = ip;
+					a->next = vexs[jp].firstArc;
+					vexs[jp].firstArc = a;
+				}
+				else
+				{
+					//DG
+					//头插法
+					pArc a = new ArcNode;
+					a->adjvex = jp;
+					a->next = vexs[ip].firstArc;
+					vexs[ip].firstArc = a;
+				}
 			}
-
-				
-			
 		}
 
 
@@ -556,12 +607,95 @@ class ALGraph
 		}
 
 
+		
+		//从顶点start到end所有简单路径
+		void Find_Path(string start, string end) {
+			
+			int s = LocatVex(start);
+			int e = LocatVex(end);
 
-		~ALGraph() {
+			if (s == -1 || e == -1)
+				exit(0);
+
+			int save_path[MaxSize];
+			for (int i = 0; i < vexnum; i++) {
+				Visited[i] = false;
+				save_path[i] = -1;
+			}
+			Finding(s, e, save_path, -1);
+		}
+
+
+		//有向图深度优先判定顶点start到end有无路径 
+		void DFS_to_FindPath(string start, string end) {
+			
+			if (Type != "DG") {
+				cout << "不是有向图";
+				exit(0);
+			}
+
+			int s = LocatVex(start);
+			int e = LocatVex(end);
+			if (s == -1 || e == -1)
+				exit(0);
+
+			for (int i = 0; i < vexnum; i++)
+				Visited[i] = false;
+			
+			if (DFS_Finding(s, e))
+				cout << vexs[s].data << " 到达 " << vexs[e].data << " 存在路径 " << endl;
+			else
+				cout << vexs[s].data << " 到达 " << vexs[e].data << " 不存在路径 " << endl;
+		}
+
+		bool BFS_Finding(int start,int end) {
+
+			SqQueue<int> q(10);
+			q.EnQueue(start);
+
+			while (!q.QueueIsEmpty()) {
+				int pos;
+				q.GetQueueTop(pos);
+				q.DeQueue();
+
+				Visited[pos] = true;
+
+				for (int i = FirstNeighbor(pos); i >= 0; i=NextNeighbor(pos,i))
+				{
+					if (i == end)
+						return true;
+					if (!Visited[i])
+						q.EnQueue(i);
+				}
+			}
+			return false;
+		}
+		//有向图广度优先判定顶点start到end有无路径
+		void BFS_to_FindPath(string start, string end) {
+			if (Type != "DG") {
+				cout << "不是有向图";
+				exit(0);
+			}
+
+			int s = LocatVex(start);
+			int e = LocatVex(end);
+			if (s == -1 || e == -1)
+				exit(0);
+
+			for (int i = 0; i < vexnum; i++)
+				Visited[i] = false;
+
+			if (BFS_Finding(s, e))
+				cout << vexs[s].data << " 到达 " << vexs[e].data << " 存在路径 " << endl;
+			else
+				cout << vexs[s].data << " 到达 " << vexs[e].data << " 不存在路径 " << endl;
 
 		}
 
 
+		~ALGraph() {
+
+		}
 
 };
 
