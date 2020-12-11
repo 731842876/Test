@@ -731,18 +731,18 @@ int main() {
 	//UDG 4 5 A B C D A B A C B C B D C D
 	//UDG 6 7 A B C D E F A B A C A E B F C D D E E F
 	//DG 6 7 A B C D E F A B B C B F D B E B F A F E
-	ALGraph m("DG");
-	m.Visit();
-	m.DFS_func();
-	m.BFS_func();
+	//ALGraph m("DG");
+	//m.Visit();
+	//m.DFS_func();
+	//m.BFS_func();
 
-	m.Find_Path("A", "D");
+	//m.Find_Path("A", "D");
 
-	m.DFS_to_FindPath("A", "F");
-	m.DFS_to_FindPath("A", "D");
+	//m.DFS_to_FindPath("A", "F");
+	//m.DFS_to_FindPath("A", "D");
 
-	m.BFS_to_FindPath("A", "F");
-	m.BFS_to_FindPath("A", "D");
+	//m.BFS_to_FindPath("A", "F");
+	//m.BFS_to_FindPath("A", "D");
 
 
 	//¡⁄Ω”æÿ’Û≤‚ ‘
@@ -750,14 +750,14 @@ int main() {
 	//8 9 A B C D E F G H A B A F A D B G C D C E E G F H G H
 	
 	//D G
+	//6 10 A B C D E F A B 6 A C 1 A D 5 B C 5 B E 3 C D 5 C E 6 C F 4 D F 2 E F 6
 	//8 11 A B C D E F G H A B A C A F B F C B C D F H G B G C G E H G
-
 	//8 9 A B C D E F G H A B A E A H B C B D C D C H E F E G
-	//MGraph m("UDG");
-	//m.Visit();
-	//m.Neighbors("A");
-	//m.Neighbors("G");
-
+	MGraph m("UDG",true);
+	m.Visit();
+	m.Neighbors("A");
+	m.Neighbors("G");
+	m.Prim_to_MST(0);
 
 	//m.DFS_func();
 	//m.BFS_func();

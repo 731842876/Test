@@ -49,7 +49,7 @@ class MGraph
 			
 			for (int i = 0; i < vexnum; i++)
 				for (int j = 0; j < vexnum; j++)
-					arcs[i][j] = 0;
+					arcs[i][j] = 1000;//999为最大权值
 
 		}
 
@@ -63,13 +63,14 @@ class MGraph
 					DFS(j);
 		}
 
+
 	public:
 
 		//重载构造
-		MGraph(string op="DG") {
+		MGraph(string op="DG",bool We=false) {
 
 			string v1, v2;
-			int ip, jp;
+			int ip, jp, w;
 			Type = op;
 
 			if (op == "DG") {
@@ -77,11 +78,24 @@ class MGraph
 				cout << "input arcs: " << endl;
 				for (int i = 0; i < arcnum; i++)
 				{	
-					cin >> v1 >> v2;
+					if (We)
+						cin >> v1 >> v2 >> w;
+					else
+						cin >> v1 >> v2;
+
 					ip = LocatVex(v1);
 					jp = LocatVex(v2);
-					if (ip != -1 && jp != -1)
-						arcs[ip][jp] = 1;
+					if (We)
+					{
+						if (ip != -1 && jp != -1)
+							arcs[ip][jp] = w;
+					}
+					else {
+						if (ip != -1 && jp != -1)
+							arcs[ip][jp] = 1;
+					}
+
+					
 				}
 			}
 			else if (op=="UDG")
@@ -90,39 +104,24 @@ class MGraph
 				cout << "input arcs: " << endl;
 				for (int i = 0; i < arcnum; i++)
 				{
-					cin >> v1 >> v2;
+					if (We)
+						cin >> v1 >> v2 >> w;
+					else
+						cin >> v1 >> v2;
+
 					ip = LocatVex(v1);
 					jp = LocatVex(v2);
-					if (ip != -1 && jp != -1)
-						arcs[ip][jp] = arcs[jp][ip] = 1;
-				}
-			}
-			else if (op == "DN") {
-				int w;
-				Input();
-				cout << "input arcs: " << endl;
-				for (int i = 0; i < arcnum; i++)
-				{
-					cin >> v1 >> v2 >> w;
-					ip = LocatVex(v1);
-					jp = LocatVex(v2);
-					if (ip != -1 && jp != -1)
-						arcs[ip][jp] = w;
-						//arcs[ip][jp] = arcs[jp][ip] = 1;
-				}
-			}
-			else if (op=="UDN")
-			{
-				int w;
-				Input();
-				cout << "input arcs: " << endl;
-				for (int i = 0; i < arcnum; i++)
-				{
-					cin >> v1 >> v2 >> w;
-					ip = LocatVex(v1);
-					jp = LocatVex(v2);
-					if (ip != -1 && jp != -1)
-						arcs[ip][jp] = arcs[jp][ip] = w;
+					if (We)
+					{
+						if (ip != -1 && jp != -1)
+							arcs[ip][jp] = arcs[jp][ip] = w;
+					}
+					else {
+						if (ip != -1 && jp != -1)
+							arcs[ip][jp] = arcs[jp][ip] = 1;
+					}
+
+			
 				}
 			}
 			else {
@@ -148,14 +147,19 @@ class MGraph
 				cout << setw(4) << vexs[i] << '\t';
 
 				for (int j = 0; j < vexnum; j++) {
-					if (arcs[i][j]!=-404) {
+					if (arcs[i][j]==-404) {
 						cout << setiosflags(ios::right);
-						cout << arcs[i][j] << "|" << '\t';
+						cout << "-" << "|" << '\t';
+					}
+					else if (arcs[i][j] == 1000)
+					{
+						cout << setiosflags(ios::right);
+						cout << "0" << "|" << '\t';
 					}
 					else
 					{
 						cout << setiosflags(ios::right);
-						cout << "-" << "|" << '\t';
+						cout << arcs[i][j] << "|" << '\t';
 					}
 				}
 				cout << endl;
@@ -347,8 +351,54 @@ class MGraph
 			cout << endl;
 		}
 		
+		//prim最小生成树
+		void Prim_to_MST(int start, int sum = 0) {
+
+			int min;//将每条最小路径加起来成最小生成树		
+			int lowCost[MaxSize];
+			int nextPost;
+
+			for (int i = 0; i < vexnum; i++)
+			{
+				lowCost[i] = arcs[start][i];
+				Visited[i] = false;
+			}
+
+			Visited[start] = true;
+
+			for (int i = 0; i < vexnum - 1; i++)
+			{
+				int min = 99999;
+				for (int j = 0; j < vexnum; j++)
+					if (!Visited[j] && lowCost[j] < min) {
+						nextPost = j;
+						min = lowCost[j];
+					}
+				sum += min;
+				cout << min << endl;
+				Visited[nextPost] = true;
+				start = nextPost;
+				
+
+				for (int j = 0; j < vexnum; j++)
+					if (!Visited[j] && arcs[start][j] < lowCost[j])
+						lowCost[j] = arcs[start][j];
+			}
+
+			cout << "最小生成路径总和： " << sum << endl;
+		}
 		
-		
+		//Kruskal最小生成树
+		void Kruskal_to_MST() {
+
+			/**********kruskal算法辅助**********/
+			typedef struct road {
+				int a, b;
+				int w;
+			};
+			/**********kruskal算法辅助**********/
+
+		}
 		
 		
 		~MGraph() {
