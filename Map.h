@@ -27,6 +27,8 @@ class MGraph
 		int arcs[MaxSize][MaxSize];
 		int vexnum, arcnum;//vertx:顶点，arc:弧
 
+		int gangster[MaxSize];//并查集
+
 	private:
 		//定位
 		int LocatVex(string in) {
@@ -63,6 +65,22 @@ class MGraph
 					DFS(j);
 		}
 
+		/**********kruskal算法辅助**********/
+		typedef struct {
+			int a, b;
+			int w;
+		}Road;
+
+		bool static COM(const Road& a, const Road& b) {
+			return a.w < b.w;
+		}
+
+		int GetBoss(int x) {
+			while (x != gangster[x])
+				x = gangster[x];
+			return x;
+		}
+		/**********kruskal算法辅助**********/
 
 	public:
 
@@ -79,23 +97,24 @@ class MGraph
 				for (int i = 0; i < arcnum; i++)
 				{	
 					if (We)
-						cin >> v1 >> v2 >> w;
-					else
-						cin >> v1 >> v2;
-
-					ip = LocatVex(v1);
-					jp = LocatVex(v2);
-					if (We)
 					{
+						cin >> v1 >> v2 >> w;
+						ip = LocatVex(v1);
+						jp = LocatVex(v2);
+
 						if (ip != -1 && jp != -1)
 							arcs[ip][jp] = w;
 					}
-					else {
+					else
+					{
+						cin >> v1 >> v2;
+
+						ip = LocatVex(v1);
+						jp = LocatVex(v2);
+
 						if (ip != -1 && jp != -1)
 							arcs[ip][jp] = 1;
 					}
-
-					
 				}
 			}
 			else if (op=="UDG")
@@ -134,7 +153,7 @@ class MGraph
 		void Visit() {
 			cout << endl;
 			
-
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 			cout << setw(4) << "*" << '\t';
 			for (int i = 0; i < vexnum; i++) {
 				cout << setiosflags(ios::right);
@@ -143,6 +162,8 @@ class MGraph
 			cout << endl;
 
 			for (int i = 0; i < vexnum; i++) {
+				
+				
 				cout << setiosflags(ios::right);
 				cout << setw(4) << vexs[i] << '\t';
 
@@ -158,8 +179,10 @@ class MGraph
 					}
 					else
 					{
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 						cout << setiosflags(ios::right);
 						cout << arcs[i][j] << "|" << '\t';
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 					}
 				}
 				cout << endl;
@@ -182,10 +205,12 @@ class MGraph
 			if (pos != -1) {
 				cout << vexs[pos] << " 与该点邻接的边: ";
 				for (int i = 0; i < vexnum; i++)
-					if (arcs[pos][i] != 0)
+					if (arcs[pos][i] != 1000)
 						cout << vexs[i] << " ";
 				cout << endl;
 			}
+			else
+				cout << "不存在该节点" << endl;
 		}
 		//插入节点
 		bool InsertVertex(string in) {
@@ -375,7 +400,6 @@ class MGraph
 						min = lowCost[j];
 					}
 				sum += min;
-				cout << min << endl;
 				Visited[nextPost] = true;
 				start = nextPost;
 				
@@ -385,30 +409,78 @@ class MGraph
 						lowCost[j] = arcs[start][j];
 			}
 
-			cout << "最小生成路径总和： " << sum << endl;
+			cout << "Prim 最小生成路径总和： " << sum << endl;
 		}
-		
+	
+
 		//Kruskal最小生成树
 		void Kruskal_to_MST() {
 
-			/**********kruskal算法辅助**********/
-			typedef struct road {
-				int a, b;
-				int w;
-			};
-			/**********kruskal算法辅助**********/
 
+			Road road[MaxSize];
+			int count = 0;
+
+			for (int i = 0; i < vexnum; i++) {
+				gangster[i] = i;
+				for (int j = i + 1; j < vexnum; j++)
+				{
+					if (arcs[i][j] != 1000) {
+						road[count].a = i;
+						road[count].b = j;
+						road[count].w = arcs[i][j];
+						count++;
+					}
+
+				}
+			}
+				
+			int a, b, sum = 0;
+			sort(road, road + count, COM);
+			for (int i = 0; i < arcnum; i++)
+			{
+				a = GetBoss(road[i].a);
+				b = GetBoss(road[i].b);
+				if (a != b) {
+					sum += road[i].w;
+					gangster[a] = b;
+				}
+			}
+			cout << "Kruskal 最小生成路径总和： " << sum << endl;
+			/*for (int i = 0; i < count; i++)
+				cout << road[i].a << " " << road[i].b << " " << road[i].w << endl;*/
 		}
 		
-		
+		void Dijkatra(string start) {
+			int start_pos = LocatVex(start);
+
+			int dist[MaxSize], path[MaxSize];
+
+			for (int i = 0; i < vexnum; i++)
+			{
+				arcs[start_pos][i] < 1000 ? dist[i] = arcs[start_pos][i] : dist[i] = 1000;
+				
+				Visited[i] = false;
+
+				arcs[start_pos][i] < 1000 ? path[i] = start_pos : path[i] = -1;
+			}
+
+			Visited[start_pos] = true;
+			
+			int min;
+			for (int i = 0; i < vexnum - 1; i++) {
+
+				min = 1000;
+
+
+			}
+		}
+
+
 		~MGraph() {
 			//delete[]arcs;
 		}
 
 };
-
-
-
 
 /**************************图的邻接矩阵及操作结束*****************/
 
@@ -418,8 +490,6 @@ class MGraph
 
 
 /**************************图的邻接表及操作开始*****************/
-
-
 
 //
 //typedef struct {

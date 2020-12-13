@@ -6,6 +6,8 @@
 #include<iomanip>
 #include<string>
 #include<stack>
+#include<algorithm>
+#include<Windows.h>
 
 #define MaxSize 100
 typedef int ElemType;

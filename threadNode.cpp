@@ -746,18 +746,18 @@ int main() {
 
 
 	//ÁÚ½Ó¾ØÕó²âÊÔ
-	//4 5 A B C D A B A C A D B C C D
-	//8 9 A B C D E F G H A B A F A D B G C D C E E G F H G H
 	
-	//D G
+	//UDG
 	//6 10 A B C D E F A B 6 A C 1 A D 5 B C 5 B E 3 C D 5 C E 6 C F 4 D F 2 E F 6
-	//8 11 A B C D E F G H A B A C A F B F C B C D F H G B G C G E H G
-	//8 9 A B C D E F G H A B A E A H B C B D C D C H E F E G
-	MGraph m("UDG",true);
+	//DG
+	//6 8 A B C D E F A B 3 A C 4 B F 1 C D 3 D A 7 D E 2 E B 2 F E 1
+	MGraph m("DG",true);
 	m.Visit();
 	m.Neighbors("A");
 	m.Neighbors("G");
 	m.Prim_to_MST(0);
+	//m.Kruskal_to_MST();
+
 
 	//m.DFS_func();
 	//m.BFS_func();
@@ -893,13 +893,6 @@ int main() {
 
 
 	//¶þ²æÊ÷±éÀú
-	//3 4 -1 6 -1 -1 2 5 -1 -1 7 -1 -1
-	//1 2 -1 4 6 -1 -1 -1 3 -1 5 -1 -1
-	//6 2 1 -1 -1 4 3 -1 -1 -1 8 -1 -1
-	//1 2 -1 -1 3 -1 -1
-
-	//19 10 5 3 1 -1 -1 2 -1 -1 2 -1 -1 5 -1 -1 9 -1 -1
-	//* + a 0 0 b 0 0 * c 0 0 - 0 d 0 0
 
 	//tNp p = NULL;
 	//p = CreateTree();

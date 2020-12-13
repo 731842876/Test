@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Stack.h" />
+    <ClCompile Include="test.cpp" />
     <ClCompile Include="threadNode.cpp" />
   </ItemGroup>
   <ItemGroup>
