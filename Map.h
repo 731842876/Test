@@ -50,8 +50,12 @@ class MGraph
 				cin >> vexs[i];
 			
 			for (int i = 0; i < vexnum; i++)
-				for (int j = 0; j < vexnum; j++)
-					arcs[i][j] = 1000;//999为最大权值
+				for (int j = 0; j < vexnum; j++) {
+					//arcs[i][j] = 1000;
+					i == j ? arcs[i][j] = 0 : arcs[i][j] = 1000;
+				}
+				//999为最大权值
+						
 
 		}
 
@@ -85,7 +89,7 @@ class MGraph
 	public:
 
 		//重载构造
-		MGraph(string op="DG",bool We=false) {
+		MGraph(string op="DG",bool We=false):Type(op) {
 
 			string v1, v2;
 			int ip, jp, w;
@@ -175,7 +179,7 @@ class MGraph
 					else if (arcs[i][j] == 1000)
 					{
 						cout << setiosflags(ios::right);
-						cout << "0" << "|" << '\t';
+						cout << "∞" << "|" << '\t';
 					}
 					else
 					{
@@ -205,7 +209,7 @@ class MGraph
 			if (pos != -1) {
 				cout << vexs[pos] << " 与该点邻接的边: ";
 				for (int i = 0; i < vexnum; i++)
-					if (arcs[pos][i] != 1000)
+					if (arcs[pos][i] != 1000 && arcs[pos][i] != 0)
 						cout << vexs[i] << " ";
 				cout << endl;
 			}
@@ -222,8 +226,13 @@ class MGraph
 			{
 				vexs[vexnum] = in;
 				vexnum++;
-				for (int i = 0; i < vexnum; i++) 
-					arcs[vexnum-1][i] = arcs[i][vexnum-1] = 0;
+				for (int i = 0; i < vexnum; i++) {
+					if (vexnum - 1 == i)
+						arcs[vexnum - 1][i] = 0;
+					else
+						arcs[vexnum - 1][i] = arcs[i][vexnum - 1] = 1000;
+				}
+					
 				
 				return true;
 			}	
@@ -378,6 +387,9 @@ class MGraph
 		
 		//prim最小生成树
 		void Prim_to_MST(int start, int sum = 0) {
+			
+			if (Type != "UDG")
+				return;
 
 			int min;//将每条最小路径加起来成最小生成树		
 			int lowCost[MaxSize];
@@ -412,11 +424,13 @@ class MGraph
 			cout << "Prim 最小生成路径总和： " << sum << endl;
 		}
 	
+		
 
 		//Kruskal最小生成树
 		void Kruskal_to_MST() {
 
-
+			if (Type != "UDG")
+				return;
 			Road road[MaxSize];
 			int count = 0;
 
@@ -451,6 +465,11 @@ class MGraph
 		}
 		
 		void Dijkatra(string start) {
+
+			if (Type != "DG")
+				return;
+
+
 			int start_pos = LocatVex(start);
 
 			int dist[MaxSize], path[MaxSize];
@@ -464,17 +483,56 @@ class MGraph
 				arcs[start_pos][i] < 1000 ? path[i] = start_pos : path[i] = -1;
 			}
 
+		
+
 			Visited[start_pos] = true;
+			path[start_pos] = -1;
 			
-			int min;
+			int min, nextPos;
 			for (int i = 0; i < vexnum - 1; i++) {
 
 				min = 1000;
 
+				for (int j = 0; j < vexnum; j++) {
+					if (!Visited[j]&&dist[j]<min)
+					{
+						min = dist[j];
+						nextPos = j;
+					}
+				}
 
-			}
+				Visited[nextPos] = true;
+
+				for (int j = 0; j < vexnum; j++)
+				{
+					if (!Visited[j] && dist[nextPos] + arcs[nextPos][j] < dist[j]) {
+						dist[j] = dist[nextPos] + arcs[nextPos][j];
+						path[j] = nextPos;
+					}
+				}
+
+			}//for
+			for (int i = 0; i < vexnum; i++)
+				cout << dist[i] << " ";
+			cout << endl;
+
+
 		}
 
+		void Floyd() {
+
+
+			int map[MaxSize][MaxSize];
+			int path[MaxSize][MaxSize];
+
+			for (int i = 0; i < vexnum; i++)
+				for (int j = 0; j < vexnum; j++) {
+					map[i][j] = arcs[i][j];
+					path[i][j] = -1;
+				}
+					
+
+		}
 
 		~MGraph() {
 			//delete[]arcs;

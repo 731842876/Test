@@ -750,13 +750,17 @@ int main() {
 	//UDG
 	//6 10 A B C D E F A B 6 A C 1 A D 5 B C 5 B E 3 C D 5 C E 6 C F 4 D F 2 E F 6
 	//DG
-	//6 8 A B C D E F A B 3 A C 4 B F 1 C D 3 D A 7 D E 2 E B 2 F E 1
-	MGraph m("DG",true);
+	//5 10 A B C D E A B 10 A E 5 B C 1 B E 2 C D 4 D C 6 D A 7 E B 3 E C 9 E D 2
+
+	MGraph m("UDG",true);
 	m.Visit();
 	m.Neighbors("A");
-	m.Neighbors("G");
-	m.Prim_to_MST(0);
-	//m.Kruskal_to_MST();
+	m.InsertVertex("G");
+	m.Visit();
+
+	/*m.Prim_to_MST(0);
+	m.Kruskal_to_MST();
+	m.Dijkatra("A");*/
 
 
 	//m.DFS_func();
