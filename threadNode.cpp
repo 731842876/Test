@@ -6,6 +6,7 @@
 #include"Squeue.h"
 #include "Value.h"
 #include "Map.h"
+#include"Sort.h"
 using namespace std;
 
 
@@ -202,6 +203,7 @@ void inOrder(tNp t) {
 
 
 /**************************二叉树操作开始*******************************/
+
 
 //递归求树高
 int getHeightbyRec(tNp p) {
@@ -571,7 +573,6 @@ void VisitPTtree(PTtree t) {
 		cout << "data: " << t.nodes[i].data << "  parent: " << t.nodes[i].parent << endl;
 }
 //兄弟表示法
-
 typedef struct CSnode {
 	char data;
 	struct CSnode* firstChild, * nextSibling;
@@ -724,15 +725,48 @@ void test(int*& p) {
 	p = &a;
 }
 
+//进度条 
+void ProcessBal() {
+	float progress = 0.0;
+	while (progress < 1.0) {
+		int barWidth = 70;
+
+		cout << "[";
+		int pos = barWidth * progress;
+		for (int i = 0; i < barWidth; ++i) {
+			if (i < pos) std::cout << "=";
+			else if (i == pos) std::cout << ">";
+			else std::cout << " ";
+		}
+		cout << "] " << int(progress * 100.0) << " %\r";
+		cout.flush();
+
+		progress += 0.00016; // delay
+	}
+	cout << endl;
+}
+
+
 int main() {
+
+
+	//排序
+	Timer();
+
+
 
 
 	//邻接表测试
 	//UDG 4 5 A B C D A B A C B C B D C D
 	//UDG 6 7 A B C D E F A B A C A E B F C D D E E F
 	//DG 6 7 A B C D E F A B B C B F D B E B F A F E
+	//DG 5 7 A B C D E A B A D B C B D C E D C D E
+
+
 	//ALGraph m("DG");
 	//m.Visit();
+
+	//m.Topological_Sort();
 	//m.DFS_func();
 	//m.BFS_func();
 
@@ -751,16 +785,17 @@ int main() {
 	//6 10 A B C D E F A B 6 A C 1 A D 5 B C 5 B E 3 C D 5 C E 6 C F 4 D F 2 E F 6
 	//DG
 	//5 10 A B C D E A B 10 A E 5 B C 1 B E 2 C D 4 D C 6 D A 7 E B 3 E C 9 E D 2
+	//3 5 A B C A B 6 A C 13 B A 10 B C 4 C A 5
 
-	MGraph m("UDG",true);
-	m.Visit();
-	m.Neighbors("A");
-	m.InsertVertex("G");
-	m.Visit();
+	//MGraph m("DG",true);
+	//m.Visit();
+	//m.Neighbors("A");
 
-	/*m.Prim_to_MST(0);
-	m.Kruskal_to_MST();
-	m.Dijkatra("A");*/
+
+	//m.Prim_to_MST(0);
+	//m.Kruskal_to_MST();
+	//m.Dijkatra("A");
+	//m.Floyd();
 
 
 	//m.DFS_func();
@@ -785,18 +820,16 @@ int main() {
 	//BST测试,BST:二叉排序树不是平衡二叉树
 	/*tNp p, res;
 	int nums[10] = { 9,23,12,43 };
-	Create_BTS(p, nums, 10);
-	LNR(p);
-	cout << endl;
-	res = Target_In_BST(p, 23);
-	cout << res->data << endl;
-	cout << NodesTo_Height(40) << endl;
-	cout << Is_BST(p) << endl;
-	cout << Target_In_Level(p, 9) << endl;
+	Create_BTS(p, nums, 4);
+	LNR(p);*/
 
-	int height, balance;
-	Is_Balance_BST(p, height, balance);
-	cout << height << " " << balance << endl;*/
+
+	//cout << Is_BST(p) << endl;
+	//cout << Target_In_Level(p, 9) << endl;
+
+	//int height, balance;
+	//Is_Balance_BST(p, height, balance);
+	//cout << height << " " << balance << endl;
 
 
 
@@ -838,9 +871,6 @@ int main() {
 	//}
 
 	
-		
-		
-	
 
 	//单链表测试
 	//int nums[5] = { 1,2,3,4,5 };
@@ -870,51 +900,6 @@ int main() {
 	InsertNodeToDLL(head, 10, 8);
 	VisitDLL(head);*/
 
-	//栈测试
-	/*string in;
-	int size = 4;
-	Stack<string> s(size);
-	while (cin>>in&&size!=0)
-	{
-		size--;
-
-		if (s.Push(in))
-			cout << "Ok!" << endl;
-		else
-			cout << "fail!" << endl;	
-			
-	}
-	
-	cout << s.Pop() << endl;
-	cout << s.Pop() << endl;
-
-	if (s.IsEmpty())
-		cout << "is empty" << endl;
-	else
-		cout << " not empty" << endl;
-
-	cout << s.GetTop() << endl;*/
-
-
-	//二叉树遍历
-
-	//tNp p = NULL;
-	//p = CreateTree();
-
-	//StackToNLR(p);
-	//cout << endl;
-	//StackToLNR(p);
-	//cout << endl;
-	//StackToLRN(p);
-	//cout << endl;
-
-	//ToInfixExpression(p, 1);
-	//cout << endl;
-	//cout << WPL(p, 0) << endl;
-	//
-	//cout << getHeight(p) << endl;
-	//Delx(p, 10);
-	//cout << getHeight(p) << endl;
 
 
 	//cout << getHeightbyRec(p) << endl;
@@ -923,36 +908,7 @@ int main() {
 	//cout << endl;
 
 
-	//if (IsCompleteBinaryTree(p))
-	//	cout << "yes" << endl;
-	//else
-	//	cout << "no" << endl;
 
-
-	//SqQueue<int> q(10);
-	//q.EnQueue(10);
-	//q.EnQueue(1);
-	//q.EnQueue(11);
-
-	//if (q.QueueIsEmpty())
-	//	cout << "null" << endl;
-	//int x;
-	//q.GetQueueTop(x);
-	//q.DeQueue();
-	//cout << x << endl;
-	//cout << "::" << q.GetTopIndex() << endl;
-
-	
-
-	//NLR(p);
-	//cout << endl;
-	//LNR(p);
-	//cout << endl;
-	/*LRN(p);
-	cout << endl;*/
-
-	//CreateThreadtree(p);
-	//inOrder(p);
 
 }
 //Ctrl + M + O: 折叠所有方法

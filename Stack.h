@@ -23,7 +23,7 @@ public:
 	~Stack() {
 		delete[]urls;
 	}
-
+	//将元素入栈
 	bool Push(const Type& element) {
 		if (top_Index >= max_Size - 1)
 			return false;
@@ -32,6 +32,7 @@ public:
 		urls[top_Index] = element;
 		return true;
 	}
+
 	//pop只用于弹出栈顶元素，不能返回栈顶元素，因为遇上cout右结合会破坏栈的先进后出。
 	bool Pop() {
 		if (top_Index < 0)
@@ -39,7 +40,7 @@ public:
 		--top_Index;
 		return true;
 	}
-
+	//获取栈顶元素 可选择配合pop将已获取的弹出
 	Type GetTop() {
 		if (top_Index < 0)
 			exit(0);
@@ -47,15 +48,16 @@ public:
 	}
 
 	bool IsEmpty() {
-		if (top_Index == -1)
-			return true;
-		return false;
+		return top_Index == -1;
 	}
 
+	//获取栈已使用大小
 	int Size() {
-		return max_Size;
+		if (top_Index = -1)
+			return -1;
+		return top_Index+1;
 	}
-
+	//获取栈顶元素下标
 	int GetTop_Index() {
 		return top_Index;
 	}

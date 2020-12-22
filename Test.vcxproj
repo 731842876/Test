@@ -147,6 +147,7 @@
     <ClInclude Include="DoubleLinkedList.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="SinglyLikedList.h" />
+    <ClInclude Include="Sort.h" />
     <ClInclude Include="Squeue.h" />
     <ClInclude Include="TString.h" />
     <ClInclude Include="Value.h" />

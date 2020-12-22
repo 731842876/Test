@@ -179,13 +179,13 @@ class MGraph
 					else if (arcs[i][j] == 1000)
 					{
 						cout << setiosflags(ios::right);
-						cout << "∞" << "|" << '\t';
+						cout <<setw(3)<< "∞" << "|" << '\t';
 					}
 					else
 					{
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_GREEN);
 						cout << setiosflags(ios::right);
-						cout << arcs[i][j] << "|" << '\t';
+						cout << setw(3) << arcs[i][j] << "|" << '\t';
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 					}
 				}
@@ -521,6 +521,8 @@ class MGraph
 
 		void Floyd() {
 
+			if (Type != "DG")
+				return;
 
 			int map[MaxSize][MaxSize];
 			int path[MaxSize][MaxSize];
@@ -532,6 +534,27 @@ class MGraph
 				}
 					
 
+			for (int k = 0; k < vexnum; k++)
+				for (int i = 0; i < vexnum; i++)
+					for (int j = 0; j < vexnum; j++)
+						if (map[i][j] > map[i][k] + map[k][j]) {
+							map[i][j] = map[i][k] + map[k][j];
+							path[i][j] = k;
+						}
+			
+			cout << endl;
+			cout << "Floyd: " << endl;
+			for (int i = 0; i < vexnum; i++) {
+				for (int j = 0; j < vexnum; j++) {
+					if (map[i][j] != INT_MAX)
+						cout << map[i][j] << " ";
+					else
+						cout << "*";
+				}
+				cout << endl;
+			}
+				
+					
 		}
 
 		~MGraph() {
@@ -569,6 +592,7 @@ class ALGraph
 		//头节点
 		typedef struct Vnode{
 			string data;
+			int count = 0;//用于拓扑排序统计入度
 			pArc firstArc;
 		}Vnode;
 
@@ -628,6 +652,16 @@ class ALGraph
 			return false;
 		}
 
+		void DFS(int i) {
+
+			Visited[i] = true;
+			cout << vexs[i].data << " ";
+			for (int j = FirstNeighbor(i); j >= 0; j = NextNeighbor(i, j))
+				if (!Visited[j])
+					DFS(j);
+
+
+		}
 	public:
 		ALGraph(string type="UDG") {
 
@@ -721,16 +755,6 @@ class ALGraph
 
 
 		
-		void DFS(int i) {
-
-			Visited[i] = true;
-			cout << vexs[i].data << " ";
-			for (int j=FirstNeighbor(i);j>=0;j=NextNeighbor(i,j))
-				if (!Visited[j])
-					DFS(j);
-			
-
-		}
 
 		//深度优先搜索
 		void DFS_func() {
@@ -867,6 +891,55 @@ class ALGraph
 				cout << vexs[s].data << " 到达 " << vexs[e].data << " 存在路径 " << endl;
 			else
 				cout << vexs[s].data << " 到达 " << vexs[e].data << " 不存在路径 " << endl;
+
+		}
+
+		void Topological_Sort() {
+
+			if (Type != "DG")
+				return;
+			//统计入度
+			for (int i = 0; i < vexnum; i++) {
+				
+				
+				pArc p = vexs[i].firstArc;
+				while (p)
+				{
+					vexs[p->adjvex].count++;
+					p = p->next;
+				}
+				//cout << vexs[i].data << ": " << vexs[i].count << endl;
+			}
+			
+			Stack<int> s(10);
+			int used = 0;
+			pArc p;
+			
+			for (int i = 0; i < vexnum; i++)
+				if (vexs[i].count == 0)
+					s.Push(i);
+
+
+			while (!s.IsEmpty())
+			{
+				int i = s.GetTop();
+				s.Pop();
+				
+				cout << vexs[i].data << " ";
+				used++;
+
+				p = vexs[i].firstArc;
+
+				while (p)
+				{
+					int nextPos = p->adjvex;
+					--(vexs[nextPos].count);
+					if (vexs[nextPos].count == 0)
+						s.Push(nextPos);
+					p = p->next;
+				}
+
+			}
 
 		}
 

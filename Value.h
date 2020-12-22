@@ -7,8 +7,10 @@
 #include<string>
 #include<stack>
 #include<algorithm>
+#include<ctime>
+#include<fstream>
+#include<assert.h>
 #include<Windows.h>
-
 #define MaxSize 100
 typedef int ElemType;
 
